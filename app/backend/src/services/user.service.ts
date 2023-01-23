@@ -3,7 +3,7 @@ import IUser from '../interfaces/IUser';
 import Token from '../utils/tokenGenerator';
 import UserModel from '../database/models/UserModel';
 
-const tokenGenerator = new Token();
+const tokenHandler = new Token();
 
 class UserService {
   public login = async (user: IUser): Promise<string | null> => {
@@ -19,11 +19,11 @@ class UserService {
 
     const { password: _, ...userWithoutPassword } = userChecked.dataValues;
 
-    return tokenGenerator.generateToken(userWithoutPassword as IUser);
+    return tokenHandler.generateToken(userWithoutPassword as IUser);
   };
 
   public getUserRole = async (authorization: string) => {
-    const tokenVerified = tokenGenerator.verifyToken(authorization);
+    const tokenVerified = tokenHandler.verifyToken(authorization);
 
     if (!tokenVerified) {
       return null;
