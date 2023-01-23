@@ -13,11 +13,23 @@ class UserService {
       return null;
     }
 
-    const passwordChecked = bcrypt.compareSync(user.password, userChecked.password);
+    const passwordChecked = bcrypt.compareSync(user.password, userChecked.dataValues.password);
 
     if (!passwordChecked) return null;
 
-    return tokenGenerator.generateToken(userChecked as IUser);
+    const { password: _, ...userWithoutPassword } = userChecked.dataValues;
+
+    return tokenGenerator.generateToken(userWithoutPassword as IUser);
+  };
+
+  public getUserRole = async (authorization: string) => {
+    const tokenVerified = tokenGenerator.verifyToken(authorization);
+
+    if (!tokenVerified) {
+      return null;
+    }
+
+    return tokenVerified;
   };
 }
 

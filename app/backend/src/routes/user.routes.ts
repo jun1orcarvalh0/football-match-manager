@@ -14,6 +14,7 @@ class UserRouter {
 
   public initRoutes() {
     this.router.post('/', validateLogin.checkingFields, userController.login);
+    this.router.get('/validate', userController.getUserRole);
   }
 }
 
