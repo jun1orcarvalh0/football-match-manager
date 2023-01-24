@@ -11,6 +11,15 @@ class MatchesService {
     });
     return matches;
   };
+
+  public findByFilter = async (bool: boolean) => {
+    const matches = await MatchesModel.findAll({
+      where: { inProgress: bool },
+      include: [{ model: TeamsModel, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: TeamsModel, as: 'awayTeam', attributes: { exclude: ['id'] } }],
+    });
+    return matches;
+  };
 }
 
 export default new MatchesService();
