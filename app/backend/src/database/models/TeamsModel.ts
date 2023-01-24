@@ -1,6 +1,6 @@
 import { Model, INTEGER, STRING } from 'sequelize';
 import db from '.';
-import Matches from './MatchesModel';
+// import Matches from './MatchesModel';
 
 class Teams extends Model {
   declare id:number;
@@ -24,7 +24,6 @@ Teams.init({
   timestamps: false,
 });
 
-Teams.hasMany(Matches);
-Matches.belongsTo(Teams);
+// Teams.hasMany(Matches);
 
 export default Teams;
