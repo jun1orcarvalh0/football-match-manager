@@ -1,14 +1,14 @@
 export default interface Match {
-  'id': number,
+  'id?': number,
   'homeTeamId': number,
   'homeTeamGoals': number,
   'awayTeamId': number,
   'awayTeamGoals': number,
-  'inProgress': boolean,
-  'homeTeam': {
+  'inProgress'?: boolean,
+  'homeTeam'?: {
     'teamName': string
   },
-  'awayTeam': {
+  'awayTeam'?: {
     'teamName': string
   }
 }
