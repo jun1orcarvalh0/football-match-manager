@@ -1,35 +1,35 @@
 import * as bcrypt from 'bcryptjs';
 import IUser from '../interfaces/IUser';
-import Token from '../utils/tokenGenerator';
+import Token from '../utils/TokenHandler';
 import UserModel from '../database/models/UserModel';
 
-const tokenGenerator = new Token();
+const tokenHandler = new Token();
 
 class UserService {
   public login = async (user: IUser): Promise<string | null> => {
+    const userChecked = await this.validateUser(user);
+
+    if (!userChecked) {
+      return null;
+    }
+
+    return tokenHandler.generateToken(userChecked as IUser);
+  };
+
+  public validateUser = async (user: IUser) => {
     const userChecked = await UserModel.findOne({ where: { email: user.email } });
 
     if (!userChecked) {
       return null;
     }
 
-    const passwordChecked = bcrypt.compareSync(user.password, userChecked.dataValues.password);
+    const passwordChecked = bcrypt.compareSync(user.password, userChecked.password);
 
-    if (!passwordChecked) return null;
-
-    const { password: _, ...userWithoutPassword } = userChecked.dataValues;
-
-    return tokenGenerator.generateToken(userWithoutPassword as IUser);
-  };
-
-  public getUserRole = async (authorization: string) => {
-    const tokenVerified = tokenGenerator.verifyToken(authorization);
-
-    if (!tokenVerified) {
+    if (!passwordChecked) {
       return null;
     }
 
-    return tokenVerified;
+    return userChecked;
   };
 }
 

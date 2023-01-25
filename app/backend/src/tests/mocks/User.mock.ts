@@ -1,9 +1,17 @@
+export const rightUser = {
+  id: 2,
+  username: 'User',
+  role: 'user',
+  email: 'user@user.com',
+  password: '$2a$08$Y8Abi8jXvsXyqm.rmp0B.uQBA5qUz7T6Ghlg/CvVr/gLxYj5UAZVO',
+}
+
 export const bodyWithoutEmail = {
-  "password": "secret_admin"
+  password: 'secret_user',
 }
 
 export const bodyWithoutPassword = {
-  "password": "secret_admin"
+  email: 'user@user.com',
 }
 
 export const bodyWithWrongEmail = {
@@ -12,15 +20,15 @@ export const bodyWithWrongEmail = {
 };
 
 export const bodyWithWrongPassword = {
-  "email": "admin@admin.com",
-  "password": "123456",
+  email: 'user@user.com',
+  password: 'hbcdsjhabjsh',
 };
 
 export const bodyWithSuccess = {
-  "email": "admin@admin.com",
-  "password": "secret_admin",
+  email: 'user@user.com',
+  password: 'secret_user',
 };
 
-export const tokenMock = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJBZG1pbiIsInJvbGUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AYWRtaW4uY29tIiwiaWF0IjoxNjc0NTA0MDE1LCJleHAiOjE2NzQ1OTA0MTV9.oZQjBMrDB1euX6l9NLJ_be7cD9MQ7jZcI8XlDOYOEKM';
+export const tokenMock = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhVmFsdWVzIjp7ImlkIjoyLCJ1c2VybmFtZSI6IlVzZXIiLCJyb2xlIjoidXNlciIsImVtYWlsIjoidXNlckB1c2VyLmNvbSIsInBhc3N3b3JkIjoiJDJhJDA4JFk4QWJpOGpYdnNYeXFtLnJtcDBCLnVRQkE1cVV6N1Q2R2hsZy9DdlZyL2dMeFlqNVVBWlZPIn0sIl9wcmV2aW91c0RhdGFWYWx1ZXMiOnsiaWQiOjIsInVzZXJuYW1lIjoiVXNlciIsInJvbGUiOiJ1c2VyIiwiZW1haWwiOiJ1c2VyQHVzZXIuY29tIiwicGFzc3dvcmQiOiIkMmEkMDgkWThBYmk4alh2c1h5cW0ucm1wMEIudVFCQTVxVXo3VDZHaGxnL0N2VnIvZ0x4WWo1VUFaVk8ifSwidW5pcW5vIjoxLCJfY2hhbmdlZCI6e30sIl9vcHRpb25zIjp7ImlzTmV3UmVjb3JkIjpmYWxzZSwiX3NjaGVtYSI6bnVsbCwiX3NjaGVtYURlbGltaXRlciI6IiIsInJhdyI6dHJ1ZSwiYXR0cmlidXRlcyI6WyJpZCIsInVzZXJuYW1lIiwicm9sZSIsImVtYWlsIiwicGFzc3dvcmQiXX0sImlzTmV3UmVjb3JkIjpmYWxzZSwiaWF0IjoxNjc0NjcwNDM0LCJleHAiOjE2NzQ3NTY4MzR9.FS83jrG6S6SfdYHUcUc_43f6QSFvZ-ztExKJStzpFaA';
 
-export const roleMock = 'admin'
+export const roleMock = 'user'
