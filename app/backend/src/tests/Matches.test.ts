@@ -24,7 +24,7 @@ const { expect } = chai;
 describe('Testes da Seção 3: Matches', () => {
   afterEach(sinon.restore);
 
-  describe('Testes que retornam falha', () => {
+  describe('Testes que retornam alguma falha', () => {
     it('Não é possível terminar uma partida já finalizada', async () => {
 
       // sinon.stub(matchesService, 'updateStatus').resolves(null);
