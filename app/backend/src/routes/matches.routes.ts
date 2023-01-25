@@ -17,6 +17,7 @@ class MatchesRouter {
     this.router.get('/', matchesController.getAll);
     this.router.post('/', validateToken.checkingToken, matchesController.createNewMatch);
     this.router.patch('/:id/finish', matchesController.updateStatus);
+    this.router.patch('/:id', matchesController.updateMatch);
   }
 }
 

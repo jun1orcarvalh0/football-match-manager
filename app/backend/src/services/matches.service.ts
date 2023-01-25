@@ -1,6 +1,6 @@
 import TeamsModel from '../database/models/TeamsModel';
 import MatchesModel from '../database/models/MatchesModel';
-import Match from '../interfaces/IMatch';
+import Match, { updateMatch } from '../interfaces/IMatch';
 
 class MatchesService {
   public findAll = async () => {
@@ -32,6 +32,14 @@ class MatchesService {
     matchFound?.set({
       inProgress: false,
     });
+
+    await matchFound?.save();
+  };
+
+  public updateMatch = async (id:number, matchToBeUpdated: updateMatch) => {
+    const matchFound = await MatchesModel.findByPk(id);
+
+    matchFound?.set(matchToBeUpdated);
 
     await matchFound?.save();
   };

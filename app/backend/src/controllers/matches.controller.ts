@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import teamsService from '../services/teams.service';
-import Match from '../interfaces/IMatch';
+import Match, { updateMatch } from '../interfaces/IMatch';
 import matchesService from '../services/matches.service';
 
 export default class MatchesController {
@@ -48,5 +48,13 @@ export default class MatchesController {
     await matchesService.updateStatus(Number(id));
 
     return res.status(200).json({ message: 'Finished' });
+  };
+
+  public updateMatch = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    await matchesService.updateMatch(Number(id), req.body as updateMatch);
+
+    return res.status(200).json({ message: 'Match was updated' });
   };
 }

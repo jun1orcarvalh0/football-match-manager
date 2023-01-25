@@ -12,3 +12,8 @@ export default interface Match {
     'teamName': string
   }
 }
+
+export interface updateMatch {
+  'homeTeamGoals': number,
+  'awayTeamGoals': number
+}
