@@ -3,18 +3,20 @@ import * as chai from 'chai';
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
-import { app } from '../app';
+import { App } from '../app';
 import UserModel from '../database/models/UserModel';
+import { bodyWithoutEmail, bodyWithoutPassword, bodyWithSuccess, bodyWithWrongEmail, bodyWithWrongPassword, rightUser, roleMock, tokenMock } from './mocks/User.mock';
 
 import { Response } from 'superagent';
-import { bodyWithoutEmail, bodyWithoutPassword, bodyWithSuccess, bodyWithWrongEmail, bodyWithWrongPassword, rightUser, roleMock, tokenMock } from './mocks/User.mock';
-import userService from '../services/user.service';
-import Token from '../utils/TokenHandler';
-import IUser from '../interfaces/IUser';
 
-const tokenHandler = new Token();
+import * as jwt from 'jsonwebtoken';
+import userService from '../services/user.service';
+import IUser from '../interfaces/IUser';
+import TokenHandler from '../utils/TokenHandler';
 
 chai.use(chaiHttp);
+
+const { app } = new App();
 
 const { expect } = chai;
 
@@ -49,7 +51,7 @@ describe('Testes da Seção 1: Users e Login', () => {
 
     it('Não é possível entrar sem token um token válido em login/validate', async () => {
 
-      sinon.stub(tokenHandler, 'verifyToken').resolves(null);
+      sinon.stub(TokenHandler, 'verifyToken').resolves(null);
   
       const { body, status } = await chai.request(app).get('/login/validate').set('authorization', 'tokeninvalido');
 
@@ -80,16 +82,16 @@ describe('Testes da Seção 1: Users e Login', () => {
   describe('Testes com campos corretos', () => {
     beforeEach(sinon.restore)
     it('É possível realizar o login', async () => {
-      // sinon.stub(userService, 'login').resolves(tokenMock);
+      sinon.stub(userService, 'login').resolves(tokenMock);
 
       const { body, status } = await chai.request(app).post('/login').send(bodyWithSuccess);
 
       expect(body).to.haveOwnProperty('token');
       expect(status).to.equal(200);
     });
-    it.skip('É possível validar o token pelo login/validate', async () => {
+    it('É possível validar o token pelo login/validate', async () => {
       const { body: { token } } = await chai.request(app).post('/login').send(bodyWithSuccess);
-  
+
       const { body, status } = await chai.request(app).get('/login/validate').set({ authorization: token });
 
       expect(body).to.deep.equal({ role: 'user' });

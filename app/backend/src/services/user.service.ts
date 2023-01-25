@@ -1,9 +1,11 @@
 import * as bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 import IUser from '../interfaces/IUser';
-import Token from '../utils/TokenHandler';
+// import TokenHandler from '../utils/TokenHandler';
 import UserModel from '../database/models/UserModel';
 
-const tokenHandler = new Token();
+const secret = process.env.JWT_SECRET;
+const config: jwt.SignOptions = { algorithm: 'HS256', expiresIn: '1d' };
 
 class UserService {
   public login = async (user: IUser): Promise<string | null> => {
@@ -13,7 +15,10 @@ class UserService {
       return null;
     }
 
-    return tokenHandler.generateToken(userChecked as IUser);
+    // return TokenHandler.generateToken(userChecked.dataValues as IUser);//
+
+    const token = jwt.sign({ ...userChecked }, secret as jwt.Secret, config);
+    return token;
   };
 
   public validateUser = async (user: IUser) => {

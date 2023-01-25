@@ -2,7 +2,6 @@ import { Router } from 'express';
 import MatchesController from '../controllers/matches.controller';
 import TokenHandler from '../utils/TokenHandler';
 
-const tokenHandler = new TokenHandler();
 const matchesController = new MatchesController();
 
 class MatchesRouter {
@@ -14,7 +13,7 @@ class MatchesRouter {
 
   public initRoutes() {
     this.router.get('/', matchesController.getAll);
-    this.router.post('/', tokenHandler.verifyToken, matchesController.createNewMatch);
+    this.router.post('/', TokenHandler.verifyToken, matchesController.createNewMatch);
     this.router.patch('/:id/finish', matchesController.updateStatus);
     this.router.patch('/:id', matchesController.updateMatch);
   }

@@ -22,7 +22,7 @@ export default class MatchesController {
   };
 
   public createNewMatch = async (req: Request, res: Response) => {
-    const { homeTeamId, awayTeamId } = req.body;
+    const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } = req.body;
 
     const checkingHomeTeamId = await teamsService.findByPk(homeTeamId);
     const checkingAwayTeamId = await teamsService.findByPk(awayTeamId);
@@ -37,7 +37,9 @@ export default class MatchesController {
       return res.status(404).json({ message: 'There is no team with such id!' });
     }
 
-    const newMatch = await matchesService.insertNewMatch(req.body as Match);
+    const newMatch = await matchesService.insertNewMatch(
+      { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals } as Match,
+    );
 
     return res.status(201).json(newMatch);
   };
@@ -45,7 +47,11 @@ export default class MatchesController {
   public updateStatus = async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    await matchesService.updateStatus(Number(id));
+    const update = await matchesService.updateStatus(Number(id));
+
+    if (!update) {
+      return res.status(401).json({ message: 'This match was already finished' });
+    }
 
     return res.status(200).json({ message: 'Finished' });
   };

@@ -26,14 +26,20 @@ class MatchesService {
     return result;
   };
 
-  public updateStatus = async (id: number) => {
+  public updateStatus = async (id: number): Promise<true | null> => {
     const matchFound = await MatchesModel.findByPk(id);
+
+    if (!matchFound?.inProgress) {
+      return null;
+    }
 
     matchFound?.set({
       inProgress: false,
     });
 
     await matchFound?.save();
+
+    return true;
   };
 
   public updateMatch = async (id:number, matchToBeUpdated: updateMatch) => {
