@@ -13,6 +13,7 @@ class LeaderboardsRouter {
 
   public initRoutes() {
     this.router.get('/home', leaderboardsController.getLeaderboardHome);
+    this.router.get('/away', leaderboardsController.getLeaderboardAway);
   }
 }
 
