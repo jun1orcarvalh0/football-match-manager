@@ -6,6 +6,7 @@ import TeamsModel from '../database/models/TeamsModel';
 import { leaderboardTeam } from '../interfaces/ITeam';
 import HomeLeaderboardHelper from '../utils/HomeLeaderboardHelper';
 import AwayLeaderboardHelper from '../utils/AwayLeaderboardHelper';
+import LeaderboardHelper from '../utils/LeaderboardHelper';
 
 class LeaderboardsService {
   public getLeaderboardHome = async () => {
@@ -44,6 +45,25 @@ class LeaderboardsService {
     return this.sortLeaderboard(leaderboardAway);
   };
 
+  public getFullLeaderboard = async () => {
+    const teams = await TeamsModel.findAll();
+    const data = await this.homeAndAwayTeamMatches();
+    // return data;
+    const leaderboard = data.map((team, index) => ({
+      name: teams[index].teamName,
+      totalPoints: LeaderboardHelper.totalPoints(team as unknown as Match[]),
+      totalGames: team.length,
+      totalVictories: LeaderboardHelper.totalVictories(team as unknown as Match[]),
+      totalDraws: LeaderboardHelper.totalDraws(team as unknown as Match[]),
+      totalLosses: LeaderboardHelper.totalLosses(team as unknown as Match[]),
+      goalsFavor: LeaderboardHelper.goalsFavor(team as unknown as Match[]),
+      goalsOwn: LeaderboardHelper.goalsOwn(team as unknown as Match[]),
+      goalsBalance: LeaderboardHelper.goalsBalance(team as unknown as Match[]),
+      efficiency: LeaderboardHelper.efficiency(team as unknown as Match[]),
+    }));
+    return this.sortLeaderboard(leaderboard);
+  };
+
   public homeTeamMatches = async () => {
     const teams = await TeamsModel.findAll();
     const promises = teams.map((team) => this.findHomeMatchesByTeamId(team.id));
@@ -56,6 +76,13 @@ class LeaderboardsService {
     const promises = teams.map((team) => this.findAwayMatchesByTeamId(team.id));
     const awayTeamMatches = await Promise.all(promises);
     return awayTeamMatches;
+  };
+
+  public homeAndAwayTeamMatches = async () => {
+    const teams = await TeamsModel.findAll();
+    const promises = teams.map((team) => this.findMatchesByTeamId(team.id));
+    const teamMatches = await Promise.all(promises);
+    return teamMatches;
   };
 
   public findHomeMatchesByTeamId = async (id: number) => {
@@ -74,6 +101,20 @@ class LeaderboardsService {
       include: [{ model: TeamsModel, as: 'awayTeam', attributes: { exclude: ['id'] } }],
     });
     return teamMatches;
+  };
+
+  public findMatchesByTeamId = async (id: number) => {
+    const awayTeamMatches = await MatchesModel.findAll({
+      where: { inProgress: false, awayTeamId: id },
+      attributes: { exclude: ['id', 'homeTeamId'] },
+      include: [{ model: TeamsModel, as: 'awayTeam', attributes: { exclude: ['id'] } }],
+    });
+    const homeTeamMatches = await MatchesModel.findAll({
+      where: { inProgress: false, homeTeamId: id },
+      attributes: { exclude: ['id', 'awayTeamId'] },
+      include: [{ model: TeamsModel, as: 'homeTeam', attributes: { exclude: ['id'] } }],
+    });
+    return [...awayTeamMatches, ...homeTeamMatches];
   };
 
   public sortLeaderboard = (teams: leaderboardTeam[]) => {

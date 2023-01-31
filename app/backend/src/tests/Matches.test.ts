@@ -81,7 +81,7 @@ describe('Testes da Seção 3: Matches', () => {
 
     it('É possível retornar todas as partidas que foram finalizadas', async () => {
       sinon.stub(matchesModel, 'findAll').resolves(finishedMatchesMock as Match[] | any);
-      const { body, status } = await chai.request(app).get('/matches?inProgress=true')
+      const { body, status } = await chai.request(app).get('/matches?inProgress=false')
 
       expect(body).to.deep.equal(finishedMatchesMock);
       expect(status).to.equal(200);
@@ -106,7 +106,7 @@ describe('Testes da Seção 3: Matches', () => {
       expect(status).to.equal(200);
     });
 
-    it('É possível terminar uma partida em andamento', async () => {
+    it('É possível atualizar uma partida em andamento', async () => {
       const { body, status } = await chai.request(app).patch('/matches/50').send(updateMatch as Match | any);
 
       expect(body).to.deep.equal({ message: 'Match was updated' });
