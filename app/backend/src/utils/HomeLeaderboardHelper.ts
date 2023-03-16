@@ -75,7 +75,6 @@ class HomeLeaderboardHelper {
 
   public efficiency = (team: Match[]) => {
     const totalPoints = this.totalPoints(team as unknown as Match[]);
-    console.log(totalPoints);
     const effiency = (totalPoints / (team.length * 3)) * 100;
     return Number(effiency.toFixed(2));
   };
