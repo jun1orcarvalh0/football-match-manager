@@ -15,20 +15,21 @@ class UserService {
       return null;
     }
 
+    const { password, ...userWithoutPassword } = userChecked.dataValues;
+
     // return TokenHandler.generateToken(userChecked.dataValues as IUser);//
 
-    const token = jwt.sign({ ...userChecked }, secret as jwt.Secret, config);
+    const token = jwt.sign({ userWithoutPassword }, secret as jwt.Secret, config);
     return token;
   };
 
   public validateUser = async (user: IUser) => {
     const userChecked = await UserModel.findOne({ where: { email: user.email } });
-
     if (!userChecked) {
       return null;
     }
 
-    const passwordChecked = bcrypt.compareSync(user.password, userChecked.password);
+    const passwordChecked = bcrypt.compareSync(user.password, userChecked.dataValues.password);
 
     if (!passwordChecked) {
       return null;

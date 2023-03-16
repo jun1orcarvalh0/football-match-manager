@@ -13,7 +13,7 @@ export default class UsersController {
   };
 
   public getUserRole = async (req: Request, res: Response) => {
-    const { user: { dataValues: { role } } } = req.body;
+    const { user: { userWithoutPassword: { role } } } = req.body;
     res.status(200).json({ role });
   };
 }

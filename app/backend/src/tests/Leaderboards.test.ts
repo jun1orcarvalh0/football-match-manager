@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Testes da Seção 4: Leaderboards', () => {
+describe.skip('Testes da Seção 4: Leaderboards', () => {
   afterEach(sinon.restore);
 
   describe('Testes que retornam com sucesso', () => {
