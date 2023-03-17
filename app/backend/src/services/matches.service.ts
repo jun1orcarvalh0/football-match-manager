@@ -33,9 +33,7 @@ class MatchesService {
       return null;
     }
 
-    matchFound?.set({
-      inProgress: false,
-    });
+    matchFound.update({ inProgress: false });
 
     await matchFound?.save();
 
@@ -45,7 +43,7 @@ class MatchesService {
   public updateMatch = async (id:number, matchToBeUpdated: updateMatch) => {
     const matchFound = await MatchesModel.findByPk(id);
 
-    matchFound?.set(matchToBeUpdated);
+    matchFound?.update(matchToBeUpdated);
 
     await matchFound?.save();
   };

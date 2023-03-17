@@ -12,7 +12,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe.skip('Testes da Seção 2: Teams', () => {
+describe('Testes da Seção 2: Teams', () => {
   afterEach(sinon.restore);
 
   describe('Teste que retorna falha', () => {

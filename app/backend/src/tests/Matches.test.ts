@@ -6,61 +6,18 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 
 import matchesModel from '../database/models/MatchesModel';
-import { allMatchesMock, finishedMatchesMock, inProgressMatchesMock, newMatchMock, newMatchWithNotInDbTeam, newMatchWithSameTeams, returnNewMatch, updateMatch } from './mocks/Match.mock';
+import { allMatchesMock, finishedMatchesMock, inProgressMatchesMock, newMatchMock, newMatchWithNotInDbTeam, newMatchWithSameTeams, returnMatchInProgress, returnMatchNotInProgress, returnNewMatch, updateMatch } from './mocks/Match.mock';
 import Match from '../interfaces/IMatch';
 import TokenHandler from '../utils/TokenHandler';
 import { bodyWithSuccess, tokenMock } from './mocks/User.mock';
-import { Request, Response, NextFunction } from 'express';
-const sandbox = require('sinon').createSandbox();
-
-import * as jest from 'jest';
-import userService from '../services/user.service';
 import matchesService from '../services/matches.service';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe.skip('Testes da Seção 3: Matches', () => {
+describe('Testes da Seção 3: Matches', () => {
   afterEach(sinon.restore);
-
-  describe('Testes que retornam alguma falha', () => {
-    it('Não é possível terminar uma partida já finalizada', async () => {
-
-      // sinon.stub(matchesService, 'updateStatus').resolves(null);
-      const { body, status } = await chai.request(app).patch('/matches/6/finish');
-
-      expect(body).to.deep.equal({ message: 'This match was already finished' });
-      expect(status).to.equal(401);
-    });
-
-    it('Não é possível inserir uma partida com times iguais', async () => {
-      const { body: { token } } = await chai.request(app).post('/login').send(bodyWithSuccess)
-
-      const { body, status } = await chai.request(app).post('/matches').send(newMatchWithSameTeams).set({ authorization: token })
-
-      expect(body).to.deep.equal({ "message": "It is not possible to create a match with two equal teams" });
-      expect(status).to.equal(422);
-    });
-
-    it('Não é possível inserir uma partida com um time inexistente na tabela teams', async () => {
-      const { body: { token } } = await chai.request(app).post('/login').send(bodyWithSuccess)
-
-      const { body, status } = await chai.request(app).post('/matches').send(newMatchWithNotInDbTeam).set({ authorization: token })
-
-      expect(body).to.deep.equal({ "message": "There is no team with such id!" });
-      expect(status).to.equal(404);
-    });
-
-    it('Não é possível inserir uma partida com um token inválido', async () => {
-      const { body: { token } } = await chai.request(app).post('/login').send(bodyWithSuccess)
-
-      const { body, status } = await chai.request(app).post('/matches').send(newMatchWithNotInDbTeam).set({ authorization: 'tokeninvalido' })
-
-      expect(body).to.deep.equal({ "message": "Token must be a valid token" });
-      expect(status).to.equal(401);
-    });
-  });
 
   describe('Testes que retornam com sucesso', () => {
     it('É possível retornar todas as partidas', async () => {
@@ -97,9 +54,8 @@ describe.skip('Testes da Seção 3: Matches', () => {
       expect(status).to.equal(201);
     });
 
-    it('É possível terminar uma partida em andamento', async () => {
-
-      // sinon.stub(matchesService, 'updateStatus').resolves(true);
+    it.skip('É possível terminar uma partida em andamento', async () => {
+      sinon.stub(matchesModel, 'findByPk').resolves(returnMatchInProgress as Match | any);
       const { body, status } = await chai.request(app).patch('/matches/42/finish');
 
       expect(body).to.deep.equal({ message: 'Finished' });
@@ -111,6 +67,42 @@ describe.skip('Testes da Seção 3: Matches', () => {
 
       expect(body).to.deep.equal({ message: 'Match was updated' });
       expect(status).to.equal(200);
+    });
+  });
+
+  describe('Testes que retornam alguma falha', () => {
+    it('Não é possível terminar uma partida já finalizada', async () => {
+      sinon.stub(matchesModel, 'findOne').resolves(returnMatchNotInProgress as Match | any);
+
+      const { body, status } = await chai.request(app).patch('/matches/6/finish');
+
+      expect(body).to.deep.equal({ message: 'This match was already finished' });
+      expect(status).to.equal(401);
+    });
+
+    it('Não é possível inserir uma partida com times iguais', async () => {
+      const { body: { token } } = await chai.request(app).post('/login').send(bodyWithSuccess)
+
+      const { body, status } = await chai.request(app).post('/matches').send(newMatchWithSameTeams).set({ authorization: token })
+
+      expect(body).to.deep.equal({ "message": "It is not possible to create a match with two equal teams" });
+      expect(status).to.equal(422);
+    });
+
+    it('Não é possível inserir uma partida com um time inexistente na tabela teams', async () => {
+      const { body: { token } } = await chai.request(app).post('/login').send(bodyWithSuccess)
+
+      const { body, status } = await chai.request(app).post('/matches').send(newMatchWithNotInDbTeam).set({ authorization: token })
+
+      expect(body).to.deep.equal({ "message": "There is no team with such id!" });
+      expect(status).to.equal(404);
+    });
+
+    it('Não é possível inserir uma partida com um token inválido', async () => {
+      const { body, status } = await chai.request(app).post('/matches').send(newMatchWithNotInDbTeam).set({ authorization: 'tokeninvalido' })
+
+      expect(body).to.deep.equal({ "message": "Token must be a valid token" });
+      expect(status).to.equal(401);
     });
   });
 });

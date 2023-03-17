@@ -766,6 +766,22 @@ export const returnNewMatch = {
   "inProgress": true
 }
 
+export const returnMatchNotInProgress = {id: 6,
+    homeTeamId: 5,
+    homeTeamGoals: 1,
+    awayTeamId: 13,
+    awayTeamGoals: 1,
+    inProgress: false
+}
+
+export const returnMatchInProgress = {id: 6,
+  homeTeamId: 5,
+  homeTeamGoals: 1,
+  awayTeamId: 13,
+  awayTeamGoals: 1,
+  inProgress: true
+}
+
 export const updateMatch = {
   "homeTeamGoals": 3,
   "awayTeamGoals": 1
