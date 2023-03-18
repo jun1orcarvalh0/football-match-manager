@@ -26,26 +26,31 @@ class MatchesService {
     return result;
   };
 
-  public updateStatus = async (id: number): Promise<true | null> => {
+  public updateStatus = async (id: number): Promise<true | false | null> => {
     const matchFound = await MatchesModel.findByPk(id);
 
-    if (!matchFound?.inProgress) {
+    if (!matchFound) {
       return null;
     }
 
-    matchFound.update({ inProgress: false });
-
-    await matchFound?.save();
+    if (!matchFound.inProgress) {
+      return false;
+    }
+    await MatchesModel.update({ inProgress: false }, { where: { id } });
 
     return true;
   };
 
-  public updateMatch = async (id:number, matchToBeUpdated: updateMatch) => {
+  public updateMatch = async (id:number, matchToBeUpdated: updateMatch): Promise<true | null> => {
     const matchFound = await MatchesModel.findByPk(id);
 
-    matchFound?.update(matchToBeUpdated);
+    if (!matchFound) {
+      return null;
+    }
 
-    await matchFound?.save();
+    await MatchesModel.update(matchToBeUpdated, { where: { id } });
+
+    return true;
   };
 }
 

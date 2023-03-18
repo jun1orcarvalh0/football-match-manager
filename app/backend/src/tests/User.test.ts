@@ -27,7 +27,6 @@ describe('Testes da Seção 1: Users e Login', () => {
     beforeEach(sinon.restore)
     it('É possível realizar o login', async () => {
       sinon.stub(UserModel, 'findOne').resolves(rightUser as UserModel)
-      // sinon.stub(userService, 'validateUser').resolves(rightUser as any);;
 
       const { body, status } = await chai.request(app).post('/login').send(bodyWithSuccess);
 

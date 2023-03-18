@@ -774,7 +774,7 @@ export const returnMatchNotInProgress = {id: 6,
     inProgress: false
 }
 
-export const returnMatchInProgress = {id: 6,
+export const returnMatchInProgress = {id: 42,
   homeTeamId: 5,
   homeTeamGoals: 1,
   awayTeamId: 13,

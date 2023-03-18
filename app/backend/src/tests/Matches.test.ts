@@ -54,8 +54,15 @@ describe('Testes da Seção 3: Matches', () => {
       expect(status).to.equal(201);
     });
 
-    it.skip('É possível terminar uma partida em andamento', async () => {
+    it('É possível terminar uma partida em andamento', async () => {
       sinon.stub(matchesModel, 'findByPk').resolves(returnMatchInProgress as Match | any);
+      sinon.stub(matchesModel, 'update').resolves({id: 42,
+        homeTeamId: 5,
+        homeTeamGoals: 1,
+        awayTeamId: 13,
+        awayTeamGoals: 1,
+        inProgress: false
+      } as Match | any);
       const { body, status } = await chai.request(app).patch('/matches/42/finish');
 
       expect(body).to.deep.equal({ message: 'Finished' });
@@ -63,7 +70,8 @@ describe('Testes da Seção 3: Matches', () => {
     });
 
     it('É possível atualizar uma partida em andamento', async () => {
-      const { body, status } = await chai.request(app).patch('/matches/50').send(updateMatch as Match | any);
+      sinon.stub(matchesModel, 'findByPk').resolves(returnMatchInProgress as Match | any);
+      const { body, status } = await chai.request(app).patch('/matches/6').send(updateMatch as Match | any);
 
       expect(body).to.deep.equal({ message: 'Match was updated' });
       expect(status).to.equal(200);
@@ -72,12 +80,29 @@ describe('Testes da Seção 3: Matches', () => {
 
   describe('Testes que retornam alguma falha', () => {
     it('Não é possível terminar uma partida já finalizada', async () => {
-      sinon.stub(matchesModel, 'findOne').resolves(returnMatchNotInProgress as Match | any);
+      sinon.stub(matchesModel, 'findByPk').resolves(returnMatchNotInProgress as Match | any);
 
       const { body, status } = await chai.request(app).patch('/matches/6/finish');
 
       expect(body).to.deep.equal({ message: 'This match was already finished' });
       expect(status).to.equal(401);
+    });
+
+    it('Não é possível terminar uma partida que não existe', async () => {
+      sinon.stub(matchesModel, 'findByPk').resolves(null);
+
+      const { body, status } = await chai.request(app).patch('/matches/220/finish');
+
+      expect(body).to.deep.equal({ message: 'This match was not found' });
+      expect(status).to.equal(401);
+    });
+
+    it('Não é possível atualizar uma partida que não existe', async () => {
+      sinon.stub(matchesModel, 'findByPk').resolves(null);
+      const { body, status } = await chai.request(app).patch('/matches/215').send(updateMatch as Match | any);
+
+      expect(body).to.deep.equal({ message: 'Match was not found' });
+      expect(status).to.equal(404);
     });
 
     it('Não é possível inserir uma partida com times iguais', async () => {

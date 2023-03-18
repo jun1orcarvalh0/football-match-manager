@@ -15,10 +15,8 @@ export default class MatchesController {
       return res.status(200).json(matches);
     }
 
-    if (req.query.inProgress === 'false') {
-      const matches = await matchesService.findByFilter(false);
-      return res.status(200).json(matches);
-    }
+    const matches = await matchesService.findByFilter(false);
+    return res.status(200).json(matches);
   };
 
   public createNewMatch = async (req: Request, res: Response) => {
@@ -49,7 +47,11 @@ export default class MatchesController {
 
     const update = await matchesService.updateStatus(Number(id));
 
-    if (!update) {
+    if (update === null) {
+      return res.status(401).json({ message: 'This match was not found' });
+    }
+
+    if (update === false) {
       return res.status(401).json({ message: 'This match was already finished' });
     }
 
@@ -59,7 +61,11 @@ export default class MatchesController {
   public updateMatch = async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    await matchesService.updateMatch(Number(id), req.body as updateMatch);
+    const update = await matchesService.updateMatch(Number(id), req.body as updateMatch);
+
+    if (!update) {
+      return res.status(404).json({ message: 'Match was not found' });
+    }
 
     return res.status(200).json({ message: 'Match was updated' });
   };
