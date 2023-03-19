@@ -1,4 +1,4 @@
-# Football match manager
+# Football Match Manager
 
 ---
 
