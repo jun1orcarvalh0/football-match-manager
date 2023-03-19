@@ -4,7 +4,7 @@
 
 ## Description
 
-This is a project for an informative website about football matches and rankings, developed by [Júnior Carvalho](https://www.linkedin.com/in/juniorcarvalh0/) following the SOLID and TDD principles. The objective is to provide a complete and integrated application, consuming a database and offering a REST API to be consumed by the front-end.
+This is a project for an informative website about football matches and rankings, developed by [Júnior Carvalho](https://www.linkedin.com/in/juniorcarvalh0/) following the SOLID and TDD principles using Object Oriented Programming. The objective is to provide a complete and integrated application, consuming a database and offering a REST API to be consumed by the front-end.
 
 ---
 
