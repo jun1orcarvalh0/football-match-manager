@@ -22,7 +22,7 @@ This is a project for an informative website about football matches and rankings
 
 ---
 
-## How to rotate
+## How to run the project
 
 ### Prerequisites
 
@@ -34,13 +34,13 @@ This is a project for an informative website about football matches and rankings
 
 1. Clone the repository
 
-```bash
+```sh
 git clone git@github.com:jun1orcarvalh0/football-match-manager.git
 ```
 
 2. Enter the project folder
 
-```bash
+```sh
 cd football-match-manager
 ```
 
@@ -48,7 +48,7 @@ cd football-match-manager
 
 > This command will install the frontend and backend dependencies simultaneously (may take a while).
 
-```bash
+```sh
 npm install
 ```
 
@@ -56,13 +56,13 @@ npm install
 
 > To run the project in development mode:
 
-```bash
+```sh
 npm run compose:up:dev
 ```
 
 > To run the project in production mode:
 
-```bash
+```sh
 npm run compose:up
 ```
 
@@ -82,13 +82,13 @@ npm run compose:up
 
 ### Accessing the container
 
-```bash
+```sh
 docker exec -it app_backend sh
 ```
 
 ### Running the tests
 
-```bash
+```sh
 npm run test
 ```
 
